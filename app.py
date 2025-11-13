@@ -1,14 +1,14 @@
 import os
 import streamlit as st
 import xml.etree.ElementTree as ET
-import openai
+from openai import OpenAI
 
 # -------------------------------------------------------------
 # CONFIGURAÇÕES INICIAIS
 # -------------------------------------------------------------
 
 # Lê a chave da OpenAI e a senha do app das variáveis do Streamlit Cloud
-openai.api_key = os.getenv("OPENAI_API_KEY", "")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
 APP_PASSWORD = os.getenv("APP_PASSWORD", "trocar-senha")
 
 # Configurações da página
@@ -29,28 +29,27 @@ if senha != APP_PASSWORD:
 
 
 # -------------------------------------------------------------
-# FUNÇÃO PARA CHAMAR A IA
+# FUNÇÃO PARA CHAMAR A IA (API NOVA DA OPENAI)
 # -------------------------------------------------------------
 def consultar_ia(pergunta: str) -> str:
-    """Envia a pergunta para a IA e retorna a resposta."""
-    if not openai.api_key:
-        return "❌ ERRO: A chave da OpenAI não está configurada."
-
+    """Envia a pergunta para a IA e retorna a resposta usando a API nova da OpenAI."""
     try:
-        resposta = openai.ChatCompletion.create(
+        resposta = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content":
-                 "Você é uma IA da Turing Tecnologia especializada em Direito Tributário do Distrito Federal. "
-                 "Responda com clareza e objetividade. Se não tiver certeza absoluta, deixe claro que a resposta "
-                 "é apenas orientativa."},
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é uma IA da Turing Tecnologia, especializada em Direito Tributário do Distrito Federal. "
+                        "Responda de forma objetiva, cite a legislação relevante quando possível e indique quando a "
+                        "informação depender de interpretação."
+                    )
+                },
                 {"role": "user", "content": pergunta},
-            ],
-            temperature=0.2
+            ]
         )
 
-        texto = resposta["choices"][0]["message"]["content"]
-        return texto
+        return resposta.choices[0].message.content
 
     except Exception as e:
         return f"❌ Erro ao consultar a IA: {e}"
@@ -60,13 +59,12 @@ def consultar_ia(pergunta: str) -> str:
 # FUNÇÃO PARA VALIDAR XML DE NF-e (MVP)
 # -------------------------------------------------------------
 def validar_xml(xml_file):
-    """Validação simples de CFOP e ICMS em um XML de NF-e."""
+    """Validação simples de CFOP e ICMS em um XML de NF-e (MVP)."""
     try:
         tree = ET.parse(xml_file)
         root = tree.getroot()
         ns = {"nfe": "http://www.portalfiscal.inf.br/nfe"}
 
-        # Extrair informações básicas
         produto = root.find(".//nfe:prod/nfe:xProd", ns)
         cfop = root.find(".//nfe:prod/nfe:CFOP", ns)
         icms = root.find(".//nfe:ICMS//nfe:pICMS", ns)
@@ -75,7 +73,7 @@ def validar_xml(xml_file):
         cfop = cfop.text if cfop is not None else "Não encontrado"
         icms = icms.text if icms is not None else "Não encontrado"
 
-        # Tabela de exemplo (APENAS MVP)
+        # Tabela de exemplo (apenas MVP)
         tabela_icms = {
             "5101": "18",
             "5102": "18",
@@ -84,7 +82,6 @@ def validar_xml(xml_file):
 
         esperado = tabela_icms.get(cfop, "Não mapeado")
 
-        # Gera resultado simples
         if esperado == "Não mapeado":
             resultado = f"⚠️ CFOP {cfop} não está mapeado no MVP."
         elif esperado == icms:
@@ -121,7 +118,8 @@ if menu == "💬 Fazer Pergunta à IA":
 
     pergunta = st.text_area(
         "Digite sua dúvida tributária:",
-        placeholder="Ex.: Qual a alíquota de ISS para consultoria no DF?"
+        placeholder="Ex.: Qual a alíquota de ISS para consultoria no DF?",
+        height=150
     )
 
     if st.button("Consultar IA"):
