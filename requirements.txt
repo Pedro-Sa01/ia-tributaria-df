@@ -1,3 +1,2 @@
 streamlit
-openai
-pypdf
+openai>=1.0.0
