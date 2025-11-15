@@ -221,9 +221,42 @@ if menu == "Consultar ContAI":
 
     st.session_state.pergunta = nova_pergunta
 
-    col1, col2 = st.columns([8, 1])
-    with col2:
-        enviar = st.button("Enviar")
+    # Layout da caixa + botão perfeitamente alinhados
+st.markdown(
+    """
+    <style>
+        .input-button-container {
+            display: flex;
+            width: 100%;
+            gap: 0px;  /* sem espaço entre caixa e botão */
+        }
+        .input-button-container textarea {
+            border-radius: 6px 0px 0px 6px !important;
+        }
+        .send-button button {
+            height: 70px;
+            border-radius: 0px 6px 6px 0px !important;
+            margin-left: 0px !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Criar layout horizontal perfeito
+caixa, botao = st.columns([10, 1])
+
+with caixa:
+    nova_pergunta = st.text_area(
+        "",
+        value=st.session_state.pergunta,
+        placeholder="Digite sua pergunta...",
+        height=70,
+        key="pergunta_input"
+    )
+
+with botao:
+    enviar = st.button("Enviar", use_container_width=True)
 
     if enviar or enviou_por_enter:
         pergunta = st.session_state.pergunta.strip()
@@ -259,3 +292,4 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
