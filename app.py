@@ -58,7 +58,7 @@ if not st.session_state.autenticado:
 
         if senha == APP_PASSWORD:
             st.session_state.autenticado = True
-            st.experimental_rerun()  # troca de tela imediatamente
+            st.rerun()  # troca de tela imediatamente
 
     st.stop()
 
@@ -209,6 +209,7 @@ elif menu == "Validar XML de NF-e":
 # Rodapé discreto
 st.markdown("---")
 st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
+
 
 
 
