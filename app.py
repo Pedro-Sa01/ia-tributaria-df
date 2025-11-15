@@ -77,7 +77,14 @@ button[data-testid="manage-app-button"] {
     visibility: hidden !important;
 }
 
-/* ============================================= */
+/* Remover botão "Manage app" fora do iframe */
+button[data-testid="manage-app-button"],
+._terminalButton_rix23_138 {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
 
 </style>
 """
@@ -265,6 +272,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
