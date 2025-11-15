@@ -28,31 +28,38 @@ header {visibility: hidden;}
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # -------------------------------------------------------------
-# INTERFACE DA TELA INICIAL
+# SISTEMA DE AUTENTICAÇÃO – TELA SEPARADA
 # -------------------------------------------------------------
 
-# TÍTULO CENTRALIZADO
-st.markdown(
-    """
-    <h1 style="text-align:center; margin-top: 40px; margin-bottom: 0px;">
-        ContAI
-    </h1>
-    """,
-    unsafe_allow_html=True
-)
+# Cria chave no estado da sessão (só na primeira execução)
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
 
-# Caixa de senha CENTRALIZADA e menor
-st.markdown("<br>", unsafe_allow_html=True)
-col1, col2, col3 = st.columns([1, 2, 1])
+# Se NÃO autenticado → mostra apenas a tela de senha
+if not st.session_state.autenticado:
 
-with col2:
-    senha = st.text_input(
-        "Digite sua senha de acesso:",
-        type="password"
+    st.markdown(
+        """
+        <h1 style="text-align:center; margin-top: 40px; margin-bottom: 0px;">
+            ContAI
+        </h1>
+        """,
+        unsafe_allow_html=True
     )
 
-# Se senha estiver errada ou vazia — para tudo antes de mostrar qualquer coisa
-if senha != APP_PASSWORD:
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        senha = st.text_input(
+            "Digite sua senha de acesso:",
+            type="password"
+        )
+
+        if senha == APP_PASSWORD:
+            st.session_state.autenticado = True
+            st.experimental_rerun()  # troca de tela imediatamente
+
     st.stop()
 
 # -------------------------------------------------------------
@@ -202,6 +209,7 @@ elif menu == "Validar XML de NF-e":
 # Rodapé discreto
 st.markdown("---")
 st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
+
 
 
 
