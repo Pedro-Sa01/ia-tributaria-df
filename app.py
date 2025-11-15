@@ -22,23 +22,33 @@ custom_css = """
 <style>
 
 /* ============================================= */
-/* 1) Remover ícones da barra superior            */
+/* 1) Remover todos os ícones do Streamlit        */
 /* ============================================= */
-header [data-testid="stToolbar"] button[kind="icon"] {
+
+/* Remove Share e todos os botões do toolbar */
+header [data-testid="stToolbarActions"] {
+    display: none !important;
+}
+
+/* Remove o menu de três pontos */
+header [data-testid="stMainMenu"] {
     display: none !important;
 }
 
 /* ============================================= */
-/* 2) Corrigir a barra superior (não remover)     */
+/* 2) Garantir que o header continue existindo    */
 /* ============================================= */
-header [data-testid="stToolbar"] {
+
+header {
+    visibility: visible !important;
     height: auto !important;
-    padding: 0 !important;
 }
 
 /* ============================================= */
-/* 3) Forçar o botão do menu lateral a aparecer   */
+/* 3) Botão de colapsar/expandir sempre visível   */
 /* ============================================= */
+
+/* Botão (quando sidebar está aberta) */
 [data-testid="stSidebarCollapseButton"] {
     opacity: 1 !important;
     visibility: visible !important;
@@ -46,27 +56,28 @@ header [data-testid="stToolbar"] {
     transition: none !important;
 }
 
-/* Ícone do botão */
+/* Ícone dentro do botão */
 [data-testid="stSidebarCollapseButton"] span {
     opacity: 1 !important;
 }
 
-/* Evitar hover mudar o comportamento */
-[data-testid="stSidebarCollapseButton"]:hover {
+/* Botão (quando sidebar está fechada) */
+[data-testid="stExpandSidebarButton"] {
     opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
 }
 
-/* ============================================= */
-/* 4) Garantir que o sidebar continue normal      */
-/* ============================================= */
-section[data-testid="stSidebar"] {
-    visibility: visible !important;
+/* Evitar hover alterar visibilidade */
+[data-testid="stExpandSidebarButton"]:hover,
+[data-testid="stSidebarCollapseButton"]:hover {
     opacity: 1 !important;
 }
 
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
+
 
 
 # -------------------------------------------------------------
@@ -248,6 +259,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
