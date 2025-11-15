@@ -22,49 +22,41 @@ custom_css = """
 <style>
 
 /* =============================== */
-/* 1) REMOVER ÍCONES DO STREAMLIT  */
+/* 1) REMOVER ÍCONES DO TOOLBAR    */
 /* =============================== */
 
-/* Remove botões do toolbar (caneta, estrela, share, github) */
-header [data-testid="stToolbar"] button {
+/* Ocultar cada botão da barra superior individualmente */
+header [data-testid="stToolbar"] button[kind="icon"] {
     display: none !important;
 }
 
-/* Remove a área do toolbar, mas SEM esconder o header */
-header [data-testid="stToolbar"] {
-    height: 0px !important;
-    padding: 0px !important;
-}
-
 /* =============================== */
-/* 2) MANTER O HEADER FUNCIONAL    */
+/* 2) GARANTIR QUE O HEADER FIQUE NORMAL */
 /* =============================== */
 
-/* Não esconde o header */
+/* Não reduzir altura, não ocultar, não colapsar */
 header {
-    visibility: visible !important;
     height: auto !important;
+    padding: 0.5rem 1rem !important;
+    visibility: visible !important;
 }
 
 /* =============================== */
 /* 3) BOTÃO DO MENU SEMPRE VISÍVEL */
 /* =============================== */
 
-/* Botão de recolher/expandir sidebar */
-button[kind="header"] {
+header [data-testid="collapsedControl"] {
     opacity: 1 !important;
+    visibility: visible !important;
     display: flex !important;
-    visibility: visible !important;
 }
 
-/* Ícone do botão */
-button[kind="header"] svg[data-testid="collapsedControl"] {
+header [data-testid="collapsedControl"] svg {
     opacity: 1 !important;
-    visibility: visible !important;
 }
 
-/* Evitar desaparecer no hover */
-button[kind="header"]:hover {
+/* NÃO permitir que desapareça com hover */
+header [data-testid="collapsedControl"]:hover {
     opacity: 1 !important;
 }
 
@@ -252,6 +244,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
