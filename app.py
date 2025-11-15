@@ -268,7 +268,7 @@ with top_col2:
         st.image("turing_logo.png", use_column_width=False)
     except Exception:
     # Se a imagem não existir, não quebra o app
-    st.markdown(
+        st.markdown(
         "<h2 style='text-align:center; margin-top: 10px;'>Turing Tecnologia</h2>",
         unsafe_allow_html=True
     )
@@ -379,6 +379,7 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
 
 
 
