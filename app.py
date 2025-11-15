@@ -267,7 +267,12 @@ with top_col2:
     try:
         st.image("turing_logo.png", use_column_width=False)
     except Exception:
-        # Se a imagem não existir, não quebra o app
+    # Se a imagem não existir, não quebra o app
+    st.markdown(
+        "<h2 style='text-align:center; margin-top: 10px;'>Turing Tecnologia</h2>",
+        unsafe_allow_html=True
+    )
+
 # -------------------------------------------------------------
 # HEADER – TURING TECNOLOGIA NO TOPO (SEM POLUIR)
 # -------------------------------------------------------------
@@ -374,6 +379,7 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
 
 
 
