@@ -46,13 +46,8 @@ header {
     opacity: 1 !important;
 }
 
-/* Remover botões externos do Cloud (não funciona dentro do iframe) */
-button[data-testid="manage-app-button"] {
-    display: none !important;
-    visibility: hidden !important;
-}
-
-/* Remover avatar e badge (se estiverem dentro do iframe) */
+/* Ocultar botão "manage app" e badges */
+button[data-testid="manage-app-button"],
 a[class*="_viewerBadge"],
 div[class*="_profileContainer"],
 img[data-testid="appCreatorAvatar"] {
@@ -126,6 +121,14 @@ frases_iniciais = [
 ]
 
 # -------------------------------------------------------------
+# MENU LATERAL (FALTAVA!)
+# -------------------------------------------------------------
+menu = st.sidebar.radio(
+    "Escolha uma funcionalidade:",
+    ["Consultar ContAI", "Validar XML de NF-e"]
+)
+
+# -------------------------------------------------------------
 # FUNÇÃO IA – OPENAI OFICIAL
 # -------------------------------------------------------------
 def consultar_ia(pergunta: str) -> str:
@@ -187,7 +190,7 @@ def validar_xml(xml_file):
         return {"Erro": f"Não foi possível processar o XML: {e}"}
 
 # -------------------------------------------------------------
-# ABA 1 – CONSULTAR IA
+# ABA 1 – CONSULTAR IA (ENTER + BOTÃO À DIREITA)
 # -------------------------------------------------------------
 if menu == "Consultar ContAI":
 
@@ -200,11 +203,9 @@ if menu == "Consultar ContAI":
         unsafe_allow_html=True
     )
 
-    # Inicializa estado
     if "pergunta" not in st.session_state:
         st.session_state.pergunta = ""
 
-    # Caixa de texto
     nova_pergunta = st.text_area(
         "",
         value=st.session_state.pergunta,
@@ -213,21 +214,17 @@ if menu == "Consultar ContAI":
         key="pergunta_input"
     )
 
-    # Detectar ENTER pelo caractere final digitado
     enviou_por_enter = False
     if len(nova_pergunta) > len(st.session_state.pergunta):
         if nova_pergunta.endswith("\n"):
             enviou_por_enter = True
 
-    # Atualiza estado
     st.session_state.pergunta = nova_pergunta
 
-    # Botão enviar à direita
     col1, col2 = st.columns([8, 1])
     with col2:
         enviar = st.button("Enviar")
 
-    # PROCESSAR ENVIO
     if enviar or enviou_por_enter:
         pergunta = st.session_state.pergunta.strip()
 
@@ -238,11 +235,10 @@ if menu == "Consultar ContAI":
                 resposta = consultar_ia(pergunta)
             st.write(resposta)
 
-        # Limpar quebra de linha ao enviar por ENTER
         st.session_state.pergunta = st.session_state.pergunta.rstrip("\n")
 
 # -------------------------------------------------------------
-# RODAPÉ FIXO
+# RODAPÉ
 # -------------------------------------------------------------
 st.markdown("<div style='height: 70px;'></div>", unsafe_allow_html=True)
 
@@ -263,4 +259,3 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
-
