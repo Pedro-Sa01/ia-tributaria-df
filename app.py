@@ -208,7 +208,7 @@ if menu == "Consultar ContAI":
         st.session_state.pergunta = ""
 
     # Caixa de texto + botão colado
-    caixa, botao = st.columns([15, 1])
+    caixa, botao = st.columns([10, 5])
 
     with caixa:
         nova_pergunta = st.text_area(
@@ -265,4 +265,5 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
 
