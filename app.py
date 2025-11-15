@@ -85,6 +85,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 
 
+
 # -------------------------------------------------------------
 # SISTEMA DE AUTENTICAÇÃO – TELA SEPARADA
 # -------------------------------------------------------------
@@ -264,6 +265,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
