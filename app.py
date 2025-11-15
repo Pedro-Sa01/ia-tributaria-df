@@ -121,7 +121,7 @@ frases_iniciais = [
 ]
 
 # -------------------------------------------------------------
-# MENU LATERAL (FALTAVA!)
+# MENU LATERAL
 # -------------------------------------------------------------
 menu = st.sidebar.radio(
     "Escolha uma funcionalidade:",
@@ -203,17 +203,26 @@ if menu == "Consultar ContAI":
         unsafe_allow_html=True
     )
 
+    # Inicializar estado
     if "pergunta" not in st.session_state:
         st.session_state.pergunta = ""
 
-    nova_pergunta = st.text_area(
-        "",
-        value=st.session_state.pergunta,
-        placeholder="Digite sua pergunta...",
-        height=70,
-        key="pergunta_input"
-    )
+    # Caixa de texto + botão colado
+    caixa, botao = st.columns([10, 1])
 
+    with caixa:
+        nova_pergunta = st.text_area(
+            "",
+            value=st.session_state.pergunta,
+            placeholder="Digite sua pergunta...",
+            height=70,
+            key="pergunta_input"
+        )
+
+    with botao:
+        enviar = st.button("Enviar", use_container_width=True)
+
+    # Detectar ENTER pelo último caractere
     enviou_por_enter = False
     if len(nova_pergunta) > len(st.session_state.pergunta):
         if nova_pergunta.endswith("\n"):
@@ -221,43 +230,7 @@ if menu == "Consultar ContAI":
 
     st.session_state.pergunta = nova_pergunta
 
-    # Layout da caixa + botão perfeitamente alinhados
-st.markdown(
-    """
-    <style>
-        .input-button-container {
-            display: flex;
-            width: 100%;
-            gap: 0px;  /* sem espaço entre caixa e botão */
-        }
-        .input-button-container textarea {
-            border-radius: 6px 0px 0px 6px !important;
-        }
-        .send-button button {
-            height: 70px;
-            border-radius: 0px 6px 6px 0px !important;
-            margin-left: 0px !important;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Criar layout horizontal perfeito
-caixa, botao = st.columns([10, 1])
-
-with caixa:
-    nova_pergunta = st.text_area(
-        "",
-        value=st.session_state.pergunta,
-        placeholder="Digite sua pergunta...",
-        height=70,
-        key="pergunta_input"
-    )
-
-with botao:
-    enviar = st.button("Enviar", use_container_width=True)
-
+    # PROCESSAR ENVIO
     if enviar or enviou_por_enter:
         pergunta = st.session_state.pergunta.strip()
 
@@ -271,7 +244,7 @@ with botao:
         st.session_state.pergunta = st.session_state.pergunta.rstrip("\n")
 
 # -------------------------------------------------------------
-# RODAPÉ
+# RODAPÉ FIXO
 # -------------------------------------------------------------
 st.markdown("<div style='height: 70px;'></div>", unsafe_allow_html=True)
 
@@ -292,4 +265,3 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
-
