@@ -205,6 +205,6 @@ elif menu == "Validar XML de NF-e":
 
 
 # Rodapé discreto
-st.markdown("---")
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
