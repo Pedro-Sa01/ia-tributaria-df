@@ -22,7 +22,6 @@ hide_streamlit_style = """
 <style>
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-header {visibility: hidden;}
 </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -151,14 +150,14 @@ def validar_xml(xml_file):
 # -------------------------------------------------------------
 menu = st.sidebar.radio(
     "Escolha uma funcionalidade:",
-    ["Fazer Pergunta Tributária", "Validar XML de NF-e"]
+    ["Consultar ContAI", "Validar XML de NF-e"]
 )
 
 
 # -------------------------------------------------------------
 # ABA 1 – PERGUNTAS TRIBUTÁRIAS
 # -------------------------------------------------------------
-if menu == "Fazer Pergunta Tributária":
+if menu == "Consultar ContAI":
 
     # Frase aleatória estilo ChatGPT
     st.markdown(
@@ -206,5 +205,6 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
