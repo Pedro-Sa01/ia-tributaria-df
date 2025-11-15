@@ -224,6 +224,31 @@ def validar_xml(xml_file):
     except Exception as e:
         return {"Erro": f"Não foi possível processar o XML: {e}"}
 
+# -------------------------------------------------------------
+# CAPTURAR TECLA ENTER (ENVIO AUTOMÁTICO)
+# -------------------------------------------------------------
+enter_js = """
+<script>
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Enter") {
+        window.parent.postMessage({type: "ENTER_PRESSED"}, "*");
+    }
+});
+</script>
+"""
+st.markdown(enter_js, unsafe_allow_html=True)
+
+# Escutar mensagens do frontend
+js_event = st.experimental_get_query_params().get("js_event", [None])[0]
+if js_event:
+    handle_js_event()
+
+# Ouvir evento do front-end
+def handle_js_event():
+    if st.session_state.get("js_event") == "ENTER_PRESSED":
+        st.session_state.enter_pressed = True
+
+st.session_state.enter_pressed = False
 
 # -------------------------------------------------------------
 # MENU LATERAL
@@ -243,38 +268,65 @@ with top_col2:
         st.image("turing_logo.png", use_column_width=False)
     except Exception:
         # Se a imagem não existir, não quebra o app
-        st.markdown(
-            "<h2 style='text-align:center; margin-top: 10px;'>Turing Tecnologia</h2>",
-            unsafe_allow_html=True
-        )
-
+# -------------------------------------------------------------
+# HEADER – TURING TECNOLOGIA NO TOPO (SEM POLUIR)
+# -------------------------------------------------------------
+st.markdown(
+    """
+    <div style="
+        width: 100%;
+        text-align: center;
+        margin-top: -15px;
+        margin-bottom: 10px;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: rgba(250, 250, 250, 0.85);
+    ">
+        Turing Tecnologia
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 st.markdown("<br>", unsafe_allow_html=True)
-
 
 # -------------------------------------------------------------
 # ABA 1 – PERGUNTAS TRIBUTÁRIAS
 # -------------------------------------------------------------
 if menu == "Consultar ContAI":
 
-    # Frase aleatória estilo ChatGPT
+    # Frase inicial estilo ChatGPT
     st.markdown(
         f"""
-        <p style="text-align:center; font-size:18px; opacity:0.85; margin-top:10px;">
+        <p style="text-align:center; font-size:18px; opacity:0.85; margin-top:5px;">
             {random.choice(frases_iniciais)}
         </p>
         """,
         unsafe_allow_html=True
     )
 
-    # Caixa de entrada menor (altura reduzida)
+    # Ajuste automático do text_area
+    if "pergunta" not in st.session_state:
+        st.session_state.pergunta = ""
+
     pergunta = st.text_area(
         "",
+        value=st.session_state.pergunta,
         placeholder="Digite sua pergunta...",
-        height=80  # antes era 150
+        height=70,
+        key="pergunta_input"
     )
 
-    # Botão simples
-    if st.button("Enviar"):
+    col_enviar, col_vazio = st.columns([1, 8])
+    with col_enviar:
+        enviar = st.button("Enviar")
+
+    # ENTER envia automaticamente
+    if st.session_state.pergunta != pergunta:
+        st.session_state.pergunta = pergunta
+
+    if enviar or st.session_state.get("enter_pressed", False):
+
         if pergunta.strip() == "":
             st.warning("Digite uma pergunta antes de consultar.")
         else:
@@ -282,6 +334,7 @@ if menu == "Consultar ContAI":
                 resposta = consultar_ia(pergunta)
             st.write(resposta)
 
+        st.session_state.enter_pressed = False
 
 # -------------------------------------------------------------
 # ABA 2 – VALIDAÇÃO DE XML
@@ -321,6 +374,7 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
 
 
 
