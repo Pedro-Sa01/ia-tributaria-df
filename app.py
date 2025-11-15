@@ -75,18 +75,6 @@ frases_iniciais = [
     "Preparado para agilizar sua rotina tributária?"
 ]
 
-st.markdown(
-    f"""
-    <p style="text-align:center; font-size:18px; opacity:0.85; margin-top:10px;">
-        {random.choice(frases_iniciais)}
-    </p>
-    """,
-    unsafe_allow_html=True
-)
-
-st.write("---")
-
-
 # -------------------------------------------------------------
 # FUNÇÃO IA – OPENAI API NOVA
 # -------------------------------------------------------------
@@ -218,9 +206,4 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.markdown("---")
-st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
-
-
-
-
-
+st.caption("Desenvolvido pela Turing Tecnologia")
