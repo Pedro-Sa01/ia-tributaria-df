@@ -86,6 +86,19 @@ button[data-testid="manage-app-button"],
     pointer-events: none !important;
 }
 
+/* REMOVER selo do Streamlit e avatar do autor */
+a[class*="_viewerBadge"],
+div[class*="_profileContainer"],
+div[class*="_profilePreview"],
+img[data-testid="appCreatorAvatar"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    pointer-events: none !important;
+}
+
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -272,6 +285,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
