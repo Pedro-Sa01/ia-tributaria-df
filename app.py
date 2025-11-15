@@ -187,44 +187,6 @@ def validar_xml(xml_file):
         return {"Erro": f"Não foi possível processar o XML: {e}"}
 
 # -------------------------------------------------------------
-# ENTER PARA ENVIAR (JS)
-# -------------------------------------------------------------
-enter_js = """
-<script>
-document.addEventListener('keydown', function(e) {
-    if (e.key === "Enter") {
-        window.parent.postMessage({type: "ENTER_PRESSED"}, "*");
-    }
-});
-</script>
-"""
-st.markdown(enter_js, unsafe_allow_html=True)
-
-def handle_js_event():
-    if st.session_state.get("js_event") == "ENTER_PRESSED":
-        st.session_state.enter_pressed = True
-
-if "enter_pressed" not in st.session_state:
-    st.session_state.enter_pressed = False
-
-if "js_event" not in st.session_state:
-    st.session_state.js_event = None
-
-query_params = st.experimental_get_query_params()
-evt = query_params.get("js_event", [None])[0]
-if evt:
-    st.session_state.js_event = evt
-    handle_js_event()
-
-# -------------------------------------------------------------
-# MENU LATERAL
-# -------------------------------------------------------------
-menu = st.sidebar.radio(
-    "Escolha uma funcionalidade:",
-    ["Consultar ContAI", "Validar XML de NF-e"]
-)
-
-# -------------------------------------------------------------
 # ABA 1 – CONSULTAR IA
 # -------------------------------------------------------------
 if menu == "Consultar ContAI":
@@ -238,46 +200,46 @@ if menu == "Consultar ContAI":
         unsafe_allow_html=True
     )
 
-    # Caixa de pergunta menor
-    pergunta = st.text_area(
+    # Inicializa estado
+    if "pergunta" not in st.session_state:
+        st.session_state.pergunta = ""
+
+    # Caixa de texto
+    nova_pergunta = st.text_area(
         "",
+        value=st.session_state.pergunta,
         placeholder="Digite sua pergunta...",
         height=70,
         key="pergunta_input"
     )
 
-    # Botão enviar à esquerda
-    col_enviar, col_vazio = st.columns([1, 8])
-    with col_enviar:
+    # Detectar ENTER pelo caractere final digitado
+    enviou_por_enter = False
+    if len(nova_pergunta) > len(st.session_state.pergunta):
+        if nova_pergunta.endswith("\n"):
+            enviou_por_enter = True
+
+    # Atualiza estado
+    st.session_state.pergunta = nova_pergunta
+
+    # Botão enviar à direita
+    col1, col2 = st.columns([8, 1])
+    with col2:
         enviar = st.button("Enviar")
 
-    if enviar or st.session_state.enter_pressed:
+    # PROCESSAR ENVIO
+    if enviar or enviou_por_enter:
+        pergunta = st.session_state.pergunta.strip()
 
-        if pergunta.strip() == "":
+        if pergunta == "":
             st.warning("Digite uma pergunta antes de consultar.")
         else:
             with st.spinner("Consultando..."):
                 resposta = consultar_ia(pergunta)
             st.write(resposta)
 
-        st.session_state.enter_pressed = False
-
-# -------------------------------------------------------------
-# ABA 2 – VALIDAR XML
-# -------------------------------------------------------------
-elif menu == "Validar XML de NF-e":
-
-    st.subheader("Validação de arquivo XML de NF-e")
-
-    arquivo = st.file_uploader("Selecione o arquivo XML", type=["xml"])
-
-    if arquivo is not None:
-        with st.spinner("Processando XML..."):
-            resultado = validar_xml(arquivo)
-
-        st.markdown("### Resultado da análise")
-        for chave, valor in resultado.items():
-            st.write(f"**{chave}:** {valor}")
+        # Limpar quebra de linha ao enviar por ENTER
+        st.session_state.pergunta = st.session_state.pergunta.rstrip("\n")
 
 # -------------------------------------------------------------
 # RODAPÉ FIXO
@@ -301,3 +263,4 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
