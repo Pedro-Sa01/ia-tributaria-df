@@ -21,42 +21,46 @@ st.set_page_config(
 custom_css = """
 <style>
 
-/* =============================== */
-/* 1) REMOVER ÍCONES DO TOOLBAR    */
-/* =============================== */
-
-/* Ocultar cada botão da barra superior individualmente */
+/* ============================================= */
+/* 1) Remover ícones da barra superior            */
+/* ============================================= */
 header [data-testid="stToolbar"] button[kind="icon"] {
     display: none !important;
 }
 
-/* =============================== */
-/* 2) GARANTIR QUE O HEADER FIQUE NORMAL */
-/* =============================== */
-
-/* Não reduzir altura, não ocultar, não colapsar */
-header {
+/* ============================================= */
+/* 2) Corrigir a barra superior (não remover)     */
+/* ============================================= */
+header [data-testid="stToolbar"] {
     height: auto !important;
-    padding: 0.5rem 1rem !important;
-    visibility: visible !important;
+    padding: 0 !important;
 }
 
-/* =============================== */
-/* 3) BOTÃO DO MENU SEMPRE VISÍVEL */
-/* =============================== */
-
-header [data-testid="collapsedControl"] {
+/* ============================================= */
+/* 3) Forçar o botão do menu lateral a aparecer   */
+/* ============================================= */
+[data-testid="stSidebarCollapseButton"] {
     opacity: 1 !important;
     visibility: visible !important;
     display: flex !important;
+    transition: none !important;
 }
 
-header [data-testid="collapsedControl"] svg {
+/* Ícone do botão */
+[data-testid="stSidebarCollapseButton"] span {
     opacity: 1 !important;
 }
 
-/* NÃO permitir que desapareça com hover */
-header [data-testid="collapsedControl"]:hover {
+/* Evitar hover mudar o comportamento */
+[data-testid="stSidebarCollapseButton"]:hover {
+    opacity: 1 !important;
+}
+
+/* ============================================= */
+/* 4) Garantir que o sidebar continue normal      */
+/* ============================================= */
+section[data-testid="stSidebar"] {
+    visibility: visible !important;
     opacity: 1 !important;
 }
 
@@ -244,6 +248,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
