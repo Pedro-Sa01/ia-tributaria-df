@@ -237,3 +237,4 @@ st.caption("Desenvolvido pela Turing Tecnologia")
 
 
 
+
