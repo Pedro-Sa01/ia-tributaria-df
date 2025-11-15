@@ -25,12 +25,10 @@ custom_css = """
 /* 1) Remover todos os ícones do Streamlit        */
 /* ============================================= */
 
-/* Remove Share e todos os botões do toolbar */
 header [data-testid="stToolbarActions"] {
     display: none !important;
 }
 
-/* Remove o menu de três pontos */
 header [data-testid="stMainMenu"] {
     display: none !important;
 }
@@ -48,7 +46,6 @@ header {
 /* 3) Botão de colapsar/expandir sempre visível   */
 /* ============================================= */
 
-/* Botão (quando sidebar está aberta) */
 [data-testid="stSidebarCollapseButton"] {
     opacity: 1 !important;
     visibility: visible !important;
@@ -56,23 +53,31 @@ header {
     transition: none !important;
 }
 
-/* Ícone dentro do botão */
 [data-testid="stSidebarCollapseButton"] span {
     opacity: 1 !important;
 }
 
-/* Botão (quando sidebar está fechada) */
 [data-testid="stExpandSidebarButton"] {
     opacity: 1 !important;
     visibility: visible !important;
     display: flex !important;
 }
 
-/* Evitar hover alterar visibilidade */
 [data-testid="stExpandSidebarButton"]:hover,
 [data-testid="stSidebarCollapseButton"]:hover {
     opacity: 1 !important;
 }
+
+/* ============================================= */
+/* 4) Ocultar botão "Manage app" do rodapé        */
+/* ============================================= */
+
+button[data-testid="manage-app-button"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* ============================================= */
 
 </style>
 """
@@ -259,6 +264,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
