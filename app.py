@@ -17,14 +17,27 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Remove elementos padrão do Streamlit
-hide_streamlit_style = """
+# Remove elementos indesejados do Streamlit e mantém o botão do menu visível
+custom_css = """
 <style>
+/* Ocultar menu superior, ícones de editar, estrela, compartilhar, github */
+header div[data-testid="stToolbar"] {visibility: hidden; height: 0px;}
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
+
+/* Manter o botão de recolher/expandir o menu lateral sempre visível */
+button[kind="header"] svg[data-testid="collapsedControl"] {
+    opacity: 1 !important;
+}
+button[kind="header"] {
+    opacity: 1 !important;
+}
+button[kind="header"]:hover {
+    opacity: 1 !important;
+}
 </style>
 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown(custom_css, unsafe_allow_html=True)
 
 # -------------------------------------------------------------
 # SISTEMA DE AUTENTICAÇÃO – TELA SEPARADA
@@ -205,6 +218,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
