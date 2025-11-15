@@ -7,32 +7,48 @@ from openai import OpenAI
 # CONFIGURAÇÕES INICIAIS
 # -------------------------------------------------------------
 
-# Lê a chave da OpenAI e a senha do app das variáveis do Streamlit Cloud
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
 APP_PASSWORD = os.getenv("APP_PASSWORD", "trocar-senha")
 
-# Configurações da página
-st.set_page_config(page_title="IA Tributária DF – Turing Tecnologia", layout="wide")
-st.title("⚖️ IA Tributária DF – Turing Tecnologia")
+st.set_page_config(
+    page_title="IA Tributária DF – Turing Tecnologia",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Ocultar elementos padrão do Streamlit
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 # -------------------------------------------------------------
-# BLOQUEIO POR SENHA (Controle de acesso simples)
+# TELA DE SENHA (ANTES DE TUDO)
 # -------------------------------------------------------------
-with st.sidebar:
-    st.subheader("Acesso restrito")
-    senha = st.text_input("Digite a senha:", type="password")
+st.title("IA Tributária DF – Turing Tecnologia")
+
+senha = st.text_input(
+    "Acesso restrito – digite a senha:",
+    type="password",
+    help="Informe a senha fornecida pela Turing Tecnologia."
+)
 
 if senha != APP_PASSWORD:
-    st.warning("🔒 Acesso negado. Digite a senha correta para continuar.")
     st.stop()
 
+st.write("---")
+
 
 # -------------------------------------------------------------
-# FUNÇÃO PARA CHAMAR A IA (API NOVA DA OPENAI)
+# FUNÇÃO IA – OPENAI API NOVA
 # -------------------------------------------------------------
 def consultar_ia(pergunta: str) -> str:
-    """Envia a pergunta para a IA e retorna a resposta usando a API nova da OpenAI."""
+    """Envia a pergunta para a IA com o modelo novo da OpenAI."""
     try:
         resposta = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -40,9 +56,8 @@ def consultar_ia(pergunta: str) -> str:
                 {
                     "role": "system",
                     "content": (
-                        "Você é uma IA da Turing Tecnologia, especializada em Direito Tributário do Distrito Federal. "
-                        "Responda de forma objetiva, cite a legislação relevante quando possível e indique quando a "
-                        "informação depender de interpretação."
+                        "Você é uma IA da Turing Tecnologia especializada em Direito Tributário do Distrito Federal. "
+                        "Responda com precisão, clareza e base legal sempre que possível."
                     )
                 },
                 {"role": "user", "content": pergunta},
@@ -52,14 +67,14 @@ def consultar_ia(pergunta: str) -> str:
         return resposta.choices[0].message.content
 
     except Exception as e:
-        return f"❌ Erro ao consultar a IA: {e}"
+        return f"Erro ao consultar a IA: {e}"
 
 
 # -------------------------------------------------------------
-# FUNÇÃO PARA VALIDAR XML DE NF-e (MVP)
+# FUNÇÃO PARA VALIDAR XML DE NF-e
 # -------------------------------------------------------------
 def validar_xml(xml_file):
-    """Validação simples de CFOP e ICMS em um XML de NF-e (MVP)."""
+    """Validação simples de CFOP e ICMS em um XML de NF-e."""
     try:
         tree = ET.parse(xml_file)
         root = tree.getroot()
@@ -73,7 +88,6 @@ def validar_xml(xml_file):
         cfop = cfop.text if cfop is not None else "Não encontrado"
         icms = icms.text if icms is not None else "Não encontrado"
 
-        # Tabela de exemplo (apenas MVP)
         tabela_icms = {
             "5101": "18",
             "5102": "18",
@@ -83,11 +97,11 @@ def validar_xml(xml_file):
         esperado = tabela_icms.get(cfop, "Não mapeado")
 
         if esperado == "Não mapeado":
-            resultado = f"⚠️ CFOP {cfop} não está mapeado no MVP."
+            resultado = f"CFOP {cfop} não mapeado."
         elif esperado == icms:
-            resultado = f"✅ ICMS correto ({icms}%)."
+            resultado = f"ICMS correto ({icms}%)."
         else:
-            resultado = f"❌ Divergência: esperado {esperado}%, encontrado {icms}%."
+            resultado = f"Divergência: esperado {esperado}%, encontrado {icms}%."
 
         return {
             "Produto": produto,
@@ -98,58 +112,57 @@ def validar_xml(xml_file):
         }
 
     except Exception as e:
-        return {"Erro": f"Não foi possível ler o XML: {e}"}
+        return {"Erro": f"Não foi possível processar o XML: {e}"}
 
 
 # -------------------------------------------------------------
-# INTERFACE (MENU LATERAL)
+# MENU LATERAL
 # -------------------------------------------------------------
 menu = st.sidebar.radio(
-    "Escolha uma opção:",
-    ["💬 Fazer Pergunta à IA", "📂 Validar XML de NF-e"]
+    "Escolha uma funcionalidade:",
+    ["Fazer Pergunta Tributária", "Validar XML de NF-e"]
 )
 
 
 # -------------------------------------------------------------
-# ABA 1 – IA TRIBUTÁRIA
+# ABA 1 – PERGUNTAS TRIBUTÁRIAS
 # -------------------------------------------------------------
-if menu == "💬 Fazer Pergunta à IA":
-    st.subheader("💬 Perguntas Tributárias – DF")
+if menu == "Fazer Pergunta Tributária":
+    st.subheader("Perguntas Tributárias – Distrito Federal")
 
     pergunta = st.text_area(
-        "Digite sua dúvida tributária:",
-        placeholder="Ex.: Qual a alíquota de ISS para consultoria no DF?",
+        "Digite sua dúvida:",
+        placeholder="Ex.: Qual a alíquota de ICMS na prestação de serviço de transporte de cargas no DF?",
         height=150
     )
 
-    if st.button("Consultar IA"):
+    if st.button("Consultar"):
         if pergunta.strip() == "":
-            st.warning("Digite uma pergunta antes de enviar.")
+            st.warning("Digite uma pergunta antes de consultar.")
         else:
             with st.spinner("Consultando IA..."):
                 resposta = consultar_ia(pergunta)
-
-            st.markdown("### 📌 Resposta da IA")
+            st.markdown("### Resposta")
             st.write(resposta)
 
 
 # -------------------------------------------------------------
 # ABA 2 – VALIDAÇÃO DE XML
 # -------------------------------------------------------------
-elif menu == "📂 Validar XML de NF-e":
-    st.subheader("📂 Validação simples de XML – MVP")
+elif menu == "Validar XML de NF-e":
+    st.subheader("Validação de arquivo XML de NF-e")
 
-    arquivo = st.file_uploader("Selecione um arquivo XML", type=["xml"])
+    arquivo = st.file_uploader("Selecione o arquivo XML", type=["xml"])
 
     if arquivo is not None:
-        with st.spinner("Analisando XML..."):
+        with st.spinner("Processando XML..."):
             resultado = validar_xml(arquivo)
 
-        st.markdown("### 📊 Resultado da Análise")
+        st.markdown("### Resultado da análise")
         for chave, valor in resultado.items():
             st.write(f"**{chave}:** {valor}")
 
 
-# Rodapé
+# Rodapé discreto
 st.markdown("---")
-st.caption("MVP IA Tributária DF • Desenvolvido pela Turing Tecnologia 💼")
+st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
