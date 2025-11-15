@@ -100,7 +100,7 @@ def consultar_ia(pergunta: str) -> str:
                     "role": "system",
                     "content": (
                         "Você é uma IA da Turing Tecnologia especializada em Direito Tributário do Distrito Federal. "
-                        "Responda com precisão, clareza e base legal sempre que possível."
+                        "Responda com precisão, clareza e sempre com base legal, caso não tenha acesso a base legal deixe isso claro para o usuário e sugira a ele que envie um feedback para Turing."
                     )
                 },
                 {"role": "user", "content": pergunta},
@@ -171,21 +171,31 @@ menu = st.sidebar.radio(
 # ABA 1 – PERGUNTAS TRIBUTÁRIAS
 # -------------------------------------------------------------
 if menu == "Fazer Pergunta Tributária":
-    st.subheader("Perguntas Tributárias – Distrito Federal")
 
+    # Frase aleatória estilo ChatGPT
+    st.markdown(
+        f"""
+        <p style="text-align:center; font-size:18px; opacity:0.85; margin-top:10px;">
+            {random.choice(frases_iniciais)}
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Caixa de entrada sem título (apenas a caixa)
     pergunta = st.text_area(
-        "Digite sua dúvida:",
-        placeholder="Ex.: Qual a alíquota de ICMS na prestação de serviço de transporte de cargas no DF?",
+        "",
+        placeholder="Digite sua pergunta...",
         height=150
     )
 
-    if st.button("Consultar"):
+    # Botão simples
+    if st.button("Enviar"):
         if pergunta.strip() == "":
             st.warning("Digite uma pergunta antes de consultar.")
         else:
-            with st.spinner("Consultando IA..."):
+            with st.spinner("Consultando..."):
                 resposta = consultar_ia(pergunta)
-            st.markdown("### Resposta")
             st.write(resposta)
 
 
