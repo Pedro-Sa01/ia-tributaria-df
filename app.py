@@ -190,7 +190,7 @@ def validar_xml(xml_file):
         return {"Erro": f"Não foi possível processar o XML: {e}"}
 
 # -------------------------------------------------------------
-# ABA 1 – CONSULTAR IA (ENTER + BOTÃO À DIREITA)
+# ABA 1 – CONSULTAR IA (BOTÃO ABAIXO E ALINHADO À DIREITA)
 # -------------------------------------------------------------
 if menu == "Consultar ContAI":
 
@@ -207,22 +207,16 @@ if menu == "Consultar ContAI":
     if "pergunta" not in st.session_state:
         st.session_state.pergunta = ""
 
-    # Caixa de texto + botão colado
-    caixa, botao = st.columns([10, 5])
+    # Caixa de pergunta
+    nova_pergunta = st.text_area(
+        "",
+        value=st.session_state.pergunta,
+        placeholder="Digite sua pergunta...",
+        height=80,
+        key="pergunta_input"
+    )
 
-    with caixa:
-        nova_pergunta = st.text_area(
-            "",
-            value=st.session_state.pergunta,
-            placeholder="Digite sua pergunta...",
-            height=70,
-            key="pergunta_input"
-        )
-
-    with botao:
-        enviar = st.button("Enviar", use_container_width=True)
-
-    # Detectar ENTER pelo último caractere
+    # Detectar ENTER (envio automático)
     enviou_por_enter = False
     if len(nova_pergunta) > len(st.session_state.pergunta):
         if nova_pergunta.endswith("\n"):
@@ -230,8 +224,15 @@ if menu == "Consultar ContAI":
 
     st.session_state.pergunta = nova_pergunta
 
+    # Linha do botão alinhado à DIREITA
+    col_esq, col_dir = st.columns([8, 2])
+
+    with col_dir:
+        enviar = st.button("Enviar", use_container_width=True)
+
     # PROCESSAR ENVIO
     if enviar or enviou_por_enter:
+
         pergunta = st.session_state.pergunta.strip()
 
         if pergunta == "":
@@ -241,6 +242,7 @@ if menu == "Consultar ContAI":
                 resposta = consultar_ia(pergunta)
             st.write(resposta)
 
+        # remover quebra de linha do enter
         st.session_state.pergunta = st.session_state.pergunta.rstrip("\n")
 
 # -------------------------------------------------------------
@@ -265,5 +267,6 @@ footer_html = """
 </div>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
+
 
 
