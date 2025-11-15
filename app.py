@@ -69,10 +69,10 @@ if not st.session_state.autenticado:
 frases_iniciais = [
     "Tudo pronto? Vamos começar!",
     "Olá! Como posso ajudar hoje?",
-    "Pronto para consultar legislação tributária?",
+    "Sou a ConAI, como posso ajudar?",
     "O que você deseja analisar hoje?",
-    "Como posso ajudar com ISS, ICMS ou NF-e?",
-    "Preparado para agilizar sua rotina tributária?"
+    "O que você precisa para hoje?",
+    "Qual sua dúvida? Eu posso ajudar."
 ]
 
 # -------------------------------------------------------------
@@ -207,3 +207,4 @@ elif menu == "Validar XML de NF-e":
 # Rodapé discreto
 st.markdown("---")
 st.caption("Desenvolvido pela Turing Tecnologia")
+
