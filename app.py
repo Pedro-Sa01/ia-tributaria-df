@@ -1,4 +1,5 @@
 import os
+import random
 import streamlit as st
 import xml.etree.ElementTree as ET
 from openai import OpenAI
@@ -11,12 +12,12 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
 APP_PASSWORD = os.getenv("APP_PASSWORD", "trocar-senha")
 
 st.set_page_config(
-    page_title="IA Tributária DF – Turing Tecnologia",
+    page_title="ContAI",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Ocultar elementos padrão do Streamlit
+# Remove elementos padrão do Streamlit
 hide_streamlit_style = """
 <style>
 #MainMenu {visibility: hidden;}
@@ -26,17 +27,50 @@ header {visibility: hidden;}
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 # -------------------------------------------------------------
-# TELA DE SENHA (ANTES DE TUDO)
+# INTERFACE DA TELA INICIAL COM TÍTULO CENTRALIZADO
 # -------------------------------------------------------------
-st.title("IA Tributária DF – Turing Tecnologia")
 
-senha = st.text_input(
-    "Acesso restrito – digite a senha:",
-    type="password",
-    help="Informe a senha fornecida pela Turing Tecnologia."
+# Título centralizado
+st.markdown(
+    """
+    <h1 style="text-align:center; margin-top: 20px; margin-bottom: 10px;">
+        ContAI
+    </h1>
+    """,
+    unsafe_allow_html=True
 )
+
+# Frases aleatórias estilo ChatGPT
+frases_iniciais = [
+    "Tudo pronto? Vamos começar!",
+    "Olá! Como posso ajudar hoje?",
+    "Sou a ContAI. Como posso ajudar?",
+    "Bem-vindo! O que precisa para hoje?",
+    "Como posso te ajudar?",
+    "Qual a sua dúvida? Eu posso ajudar."
+]
+
+# Exibe uma frase aleatória abaixo do título
+st.markdown(
+    f"""
+    <p style="text-align:center; font-size:18px; opacity:0.85;">
+        {random.choice(frases_iniciais)}
+    </p>
+    """,
+    unsafe_allow_html=True
+)
+
+# Caixa de senha menor e centralizada
+st.markdown("<br>", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 2, 1])  # coluna do meio maior para centralizar a caixa
+
+with col2:
+    senha = st.text_input(
+        "Digite sua senha de acesso:",
+        type="password"
+    )
 
 if senha != APP_PASSWORD:
     st.stop()
@@ -166,3 +200,4 @@ elif menu == "Validar XML de NF-e":
 # Rodapé discreto
 st.markdown("---")
 st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
+
