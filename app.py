@@ -233,6 +233,23 @@ menu = st.sidebar.radio(
     ["Consultar ContAI", "Validar XML de NF-e"]
 )
 
+# -------------------------------------------------------------
+# LOGO CENTRALIZADO NO TOPO
+# -------------------------------------------------------------
+top_col1, top_col2, top_col3 = st.columns([1, 2, 1])
+
+with top_col2:
+    try:
+        st.image("turing_logo.png", use_column_width=False)
+    except Exception:
+        # Se a imagem não existir, não quebra o app
+        st.markdown(
+            "<h2 style='text-align:center; margin-top: 10px;'>Turing Tecnologia</h2>",
+            unsafe_allow_html=True
+        )
+
+st.markdown("<br>", unsafe_allow_html=True)
+
 
 # -------------------------------------------------------------
 # ABA 1 – PERGUNTAS TRIBUTÁRIAS
@@ -249,11 +266,11 @@ if menu == "Consultar ContAI":
         unsafe_allow_html=True
     )
 
-    # Caixa de entrada sem título (apenas a caixa)
+    # Caixa de entrada menor (altura reduzida)
     pergunta = st.text_area(
         "",
         placeholder="Digite sua pergunta...",
-        height=150
+        height=80  # antes era 150
     )
 
     # Botão simples
@@ -283,8 +300,27 @@ elif menu == "Validar XML de NF-e":
             st.write(f"**{chave}:** {valor}")
 
 
-# Rodapé discreto
-st.caption("Desenvolvido pela Turing Tecnologia")
+# Espaço final para não esconder conteúdo atrás do rodapé
+st.markdown("<div style='height: 60px;'></div>", unsafe_allow_html=True)
+
+# Rodapé fixo e centralizado
+footer_html = """
+<div style="
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 12px;
+    color: rgba(250, 250, 250, 0.7);
+    background-color: rgba(14, 17, 23, 0.95);
+    z-index: 999;
+">
+    Desenvolvido pela Turing Tecnologia
+</div>
+"""
+st.markdown(footer_html, unsafe_allow_html=True)
 
 
 
