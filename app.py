@@ -1,4 +1,4 @@
-import os
+iimport os
 import random
 import streamlit as st
 import xml.etree.ElementTree as ET
@@ -28,43 +28,22 @@ header {visibility: hidden;}
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # -------------------------------------------------------------
-# INTERFACE DA TELA INICIAL COM TÍTULO CENTRALIZADO
+# INTERFACE DA TELA INICIAL
 # -------------------------------------------------------------
 
-# Título centralizado
+# TÍTULO CENTRALIZADO
 st.markdown(
     """
-    <h1 style="text-align:center; margin-top: 20px; margin-bottom: 10px;">
+    <h1 style="text-align:center; margin-top: 40px; margin-bottom: 0px;">
         ContAI
     </h1>
     """,
     unsafe_allow_html=True
 )
 
-# Frases aleatórias estilo ChatGPT
-frases_iniciais = [
-    "Tudo pronto? Vamos começar!",
-    "Olá! Como posso ajudar hoje?",
-    "Sou a ContAI. Como posso ajudar?",
-    "Bem-vindo! O que precisa para hoje?",
-    "Como posso te ajudar?",
-    "Qual a sua dúvida? Eu posso ajudar."
-]
-
-# Exibe uma frase aleatória abaixo do título
-st.markdown(
-    f"""
-    <p style="text-align:center; font-size:18px; opacity:0.85;">
-        {random.choice(frases_iniciais)}
-    </p>
-    """,
-    unsafe_allow_html=True
-)
-
-# Caixa de senha menor e centralizada
+# Caixa de senha CENTRALIZADA e menor
 st.markdown("<br>", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns([1, 2, 1])  # coluna do meio maior para centralizar a caixa
+col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
     senha = st.text_input(
@@ -72,8 +51,31 @@ with col2:
         type="password"
     )
 
+# Se senha estiver errada ou vazia — para tudo antes de mostrar qualquer coisa
 if senha != APP_PASSWORD:
     st.stop()
+
+# -------------------------------------------------------------
+# APÓS A SENHA CORRETA → MOSTRAR FRASE ALEATÓRIA COMO O CHATGPT
+# -------------------------------------------------------------
+
+frases_iniciais = [
+    "Tudo pronto? Vamos começar!",
+    "Olá! Como posso ajudar hoje?",
+    "Pronto para consultar legislação tributária?",
+    "O que você deseja analisar hoje?",
+    "Como posso ajudar com ISS, ICMS ou NF-e?",
+    "Preparado para agilizar sua rotina tributária?"
+]
+
+st.markdown(
+    f"""
+    <p style="text-align:center; font-size:18px; opacity:0.85; margin-top:10px;">
+        {random.choice(frases_iniciais)}
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
 st.write("---")
 
@@ -200,4 +202,5 @@ elif menu == "Validar XML de NF-e":
 # Rodapé discreto
 st.markdown("---")
 st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
+
 
