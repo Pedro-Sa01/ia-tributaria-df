@@ -20,24 +20,38 @@ st.set_page_config(
 # Remove elementos indesejados do Streamlit e mantém o botão do menu visível
 custom_css = """
 <style>
-/* Ocultar menu superior, ícones de editar, estrela, compartilhar, github */
-header div[data-testid="stToolbar"] {visibility: hidden; height: 0px;}
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
 
-/* Manter o botão de recolher/expandir o menu lateral sempre visível */
+/* ======== 1) OCULTAR ÍCONES (caneta, estrela, compartilhar, github) ======== */
+header div[data-testid="stToolbar"] button {
+    display: none !important;
+}
+
+/* ======== 2) GARANTIR QUE O HEADER CONTINUA EXISTENTE ======== */
+header {
+    visibility: visible !important;
+    height: auto !important;
+}
+
+/* ======== 3) GARANTIR QUE O BOTÃO DO SIDEBAR FIQUE SEMPRE VISÍVEL ======== */
+button[kind="header"] {
+    opacity: 1 !important;
+    display: flex !important;
+}
+
+/* O SVG do botão de colapsar sidebar */
 button[kind="header"] svg[data-testid="collapsedControl"] {
     opacity: 1 !important;
 }
-button[kind="header"] {
-    opacity: 1 !important;
-}
+
+/* Evita desaparecer no hover */
 button[kind="header"]:hover {
     opacity: 1 !important;
 }
+
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
+
 
 # -------------------------------------------------------------
 # SISTEMA DE AUTENTICAÇÃO – TELA SEPARADA
@@ -218,6 +232,7 @@ elif menu == "Validar XML de NF-e":
 
 # Rodapé discreto
 st.caption("Desenvolvido pela Turing Tecnologia")
+
 
 
 
