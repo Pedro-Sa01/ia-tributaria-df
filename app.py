@@ -1,4 +1,4 @@
-iimport os
+import os
 import random
 import streamlit as st
 import xml.etree.ElementTree as ET
@@ -202,5 +202,6 @@ elif menu == "Validar XML de NF-e":
 # Rodapé discreto
 st.markdown("---")
 st.caption("IA Tributária DF • Desenvolvido pela Turing Tecnologia")
+
 
 
